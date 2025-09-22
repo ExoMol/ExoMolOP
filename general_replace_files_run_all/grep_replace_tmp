@@ -1,0 +1,32 @@
+cp run_hdf5_ktabs_NEMESIS_R1000_NEWORDER_microns.csh run_hdf5_ktabs_NEMESIS_R1000_NEWORDER_microns_tmp.csh
+sed -i -e 's/rep1/12C2-1H2__aCeTY/g' run_hdf5_ktabs_NEMESIS_R1000_NEWORDER_microns_tmp.csh
+sed -i -e 's/rep2/C2H2/g' run_hdf5_ktabs_NEMESIS_R1000_NEWORDER_microns_tmp.csh
+sed -i -e 's/rep3/26/g' run_hdf5_ktabs_NEMESIS_R1000_NEWORDER_microns_tmp.csh
+cp run_hdf5_ktabs_petit_STANDARD_wngrid_cut_samples.csh run_hdf5_ktabs_petit_STANDARD_wngrid_cut_samples_tmp.csh
+sed -i -e 's/rep1/12C2-1H2__aCeTY/g' run_hdf5_ktabs_petit_STANDARD_wngrid_cut_samples_tmp.csh
+sed -i -e 's/rep2/C2H2/g' run_hdf5_ktabs_petit_STANDARD_wngrid_cut_samples_tmp.csh
+sed -i -e 's/rep3/26/g' run_hdf5_ktabs_petit_STANDARD_wngrid_cut_samples_tmp.csh
+cp run_ktable_R1000.csh run_ktable_R1000_tmp.csh
+sed -i -e 's/rep1/12C2-1H2__aCeTY/g' run_ktable_R1000_tmp.csh
+sed -i -e 's/rep2/C2H2/g' run_ktable_R1000_tmp.csh
+sed -i -e 's/rep3/26/g' run_ktable_R1000_tmp.csh
+cp run_sample_hdf5.csh run_sample_hdf5_tmp.csh
+sed -i -e 's/rep1/12C2-1H2__aCeTY/g' run_sample_hdf5_tmp.csh
+sed -i -e 's/rep2/C2H2/g' run_sample_hdf5_tmp.csh
+sed -i -e 's/rep3/26/g' run_sample_hdf5_tmp.csh
+cp create_ktables_R1000.py create_ktables_R1000_tmp.py
+sed -i -e 's/rep4/10.1093\/mnras\/staa229/g' create_ktables_R1000_tmp.py
+sed -i -e 's/rep5/v1_090420/g' create_ktables_R1000_tmp.py
+cp create_ktables_NEMESIS_hdf5_R1000_NEWORDER_microns.py create_ktables_NEMESIS_hdf5_R1000_NEWORDER_microns_tmp.py
+sed -i -e 's/rep4/10.1093\/mnras\/staa229/g' create_ktables_NEMESIS_hdf5_R1000_NEWORDER_microns_tmp.py
+sed -i -e 's/rep5/v1_090420/g' create_ktables_NEMESIS_hdf5_R1000_NEWORDER_microns_tmp.py
+cp sample_xsec_hdf5.py sample_xsec_hdf5_tmp.py
+sed -i -e 's/rep4/10.1093\/mnras\/staa229/g' sample_xsec_hdf5_tmp.py
+sed -i -e 's/rep5/v1_090420/g' sample_xsec_hdf5_tmp.py
+cp create_ktables_hdf5_petit_STANDARD_wngrid_samples.py create_ktables_hdf5_petit_STANDARD_wngrid_samples_tmp.py
+sed -i -e 's/rep4/10.1093\/mnras\/staa229/g' create_ktables_hdf5_petit_STANDARD_wngrid_samples_tmp.py
+sed -i -e 's/rep5/v1_090420/g' create_ktables_hdf5_petit_STANDARD_wngrid_samples_tmp.py
+./b_ktable_R1000.sh C2H2_input.py 4
+./b_sample_hdf5.sh C2H2_input.py 1
+./b_hdf5_ktabs_petit_STANDARD_wngrid_cut_samples.sh C2H2_input.py 4
+./b_hdf5_ktabs_NEMESIS_R1000_NEWORDER_microns.sh C2H2_input.py 4

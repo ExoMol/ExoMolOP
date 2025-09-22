@@ -1,0 +1,22 @@
+cp ../general_replace_files_run_all/create_ktables_R1000.py .
+cp ../general_replace_files_run_all/b_ktable_R1000.sh .
+cp ../general_replace_files_run_all/run_ktable_R1000.csh .
+cp ../general_replace_files_run_all/sample_xsec_hdf5.py .
+cp ../general_replace_files_run_all/run_sample_hdf5.csh .
+cp ../general_replace_files_run_all/b_sample_hdf5.sh .
+cp ../general_replace_files_run_all/b_hdf5_ktabs_petit_STANDARD_wngrid_cut_samples.sh .
+cp ../general_replace_files_run_all/create_ktables_hdf5_petit_STANDARD_wngrid_samples.py .
+cp ../general_replace_files_run_all/run_hdf5_ktabs_petit_STANDARD_wngrid_cut_samples.csh .
+cp ../general_replace_files_run_all/bin_edges_wn_cut.dat .
+cp ../general_replace_files_run_all/b_hdf5_ktabs_NEMESIS_R1000_NEWORDER_microns.sh .
+cp ../general_replace_files_run_all/create_ktables_NEMESIS_hdf5_R1000_NEWORDER_microns.py .
+cp ../general_replace_files_run_all/run_hdf5_ktabs_NEMESIS_R1000_NEWORDER_microns.csh .
+cp ../general_replace_files_run_all/grep_replace .
+cp grep_replace grep_replace_tmp
+sed -i -e 's/xxx/H2S-34__AYT2/g' grep_replace_tmp
+sed -i -e 's/yyy/H2S-34/g' grep_replace_tmp
+sed -i -e 's/zzz/36/g' grep_replace_tmp
+sed -i -e 's/qqq/10.1093\\\/mnras\\\/stw1133/g' grep_replace_tmp
+sed -i -e 's/vvv/20250524/g' grep_replace_tmp
+sh grep_replace_tmp
+

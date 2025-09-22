@@ -1,0 +1,2 @@
+scp xsec_hdf5_sampled_R15000_0.3-50_final_v1/xxx.R15000_0.3-50mu.xsec.TauREx.h5 kchubb@ssh0.theory.phys.ucl.ac.uk:/home/kchubb/kchubb/ExoMolOP
+scp xsec_ktable_petitRADTRANS_R1000_final_v1_16g/xxx.R1000_0.3-50mu.ktable.petitRADTRANS.h5 kchubb@ssh0.theory.phys.ucl.ac.uk:/home/kchubb/kchubb/ExoMolOP

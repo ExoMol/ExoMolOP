@@ -1,0 +1,13 @@
+run file_names:
+
+run_hdf5_ktabs_NEMESIS_R1000_NEWORDER_microns.csh
+run_hdf5_ktabs_petit_STANDARD_wngrid_cut_samples.csh
+run_ktable_R1000.csh
+run_sample_hdf5.csh
+
+create file_names:
+
+create_ktables_R1000.py - ARCiS
+create_ktables_NEMESIS_hdf5_R1000_NEWORDER_microns.py - NEMESIS
+sample_xsec_hdf5.py - TauREx
+create_ktables_hdf5_petit_STANDARD_wngrid_samples.py - petitRADTRANS

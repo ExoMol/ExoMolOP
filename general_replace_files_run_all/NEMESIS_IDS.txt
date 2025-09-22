@@ -1,0 +1,102 @@
+Mol    NEMESIS  HITRAN  number  New  suggested  numbers
+AlCl   84
+AlF    85
+AlH    86
+AlO    83
+AsH3   41
+BeH    87
+C2     88
+C2H2   26
+C2H4   32
+CaF    89
+CaH    90
+BLANK    91
+CaO    92
+CH     93
+CH3    94
+CH3Cl  24
+CH3F   95
+CH4    6
+CN     96
+CO     5
+CO2    2
+CP     97
+CrH    98
+CS     54
+FeH    82
+H2     39
+H2     39
+H2CO   20
+H2O    1
+H2O2   25
+H2S    36
+H3^+   81
+HBr    16
+HCl    15
+HCN    23
+HD+    99
+HeH+   100
+HF     14
+HI     17
+HNO3   12
+K      61
+KCl    101
+KF     102
+LiCl   103
+LiF    104
+LiH    105
+LiH+   106
+MgF    107
+MgH    108
+MgO    109
+N2O    4
+Na     60
+NaCl   110
+NaF    111
+NaH    112
+NH     113
+NH3    11
+NO     8
+NO2    10
+NS     114
+O2     7
+O3     3
+OH     13
+OH+    115
+P2H2_cis   116
+P2H2_trans   117
+PH     118
+PH3    28
+PN     119
+PO     120
+PS     121
+ScH    122
+SH     123
+SiH    124
+SiH2   125
+SiH4   126
+SiO    127
+SiO2   128
+SiS    129
+SO2    9
+SO3    74
+TiH    130
+TiO    62
+VO     63
+
+ADDED: 
+H3O+ 131
+NaOH 132
+KOH 133
+YO 134
+C2H6 27 (used to be 135)
+CH3OH 47 (used to be 136)
+SO 135
+CH3D 6 (same as CH4)
+
+LiOH - 136
+CaOH - 137
+ZrO - 138
+CaCl - 139
+H2CS  - 140
+
