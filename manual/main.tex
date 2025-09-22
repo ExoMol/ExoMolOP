@@ -1,0 +1,216 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{ExoMolOP opacity notes}
+\author{Katy Chubb}
+\date{June 2023}
+
+\begin{document}
+
+\maketitle
+
+
+Files on Dial in \verb|/scratch/dp060/dc-chub1/ExoCross/files_ExoMolOP/|
+Note that the cut-off has been now fixed at 25cm$^{-1}$ using: \verb|define['fixed_cutoff'] = 25| in the input files. 
+\section{Non-super-lines}
+
+Using SO as an example here. 
+
+\subsection*{1. Set up input file and replace:}
+
+\begin{itemize}
+\item Rename e.g. \verb|SO_input.py| and replace these lines:
+\item \verb|define['molecule_name'] = 'SO'|
+\item Folders in section: \\
+\verb|if define['platform'] == 'cobweb':| \\
+(where the line-list is stored, and where all opacities should be created for that molecule)\footnote{Ignore reference to cobweb, this is now Dial}
+\item \verb|define['mean-mass'] = 48.064| \\ (molar mass)
+\item \verb|define['ptfile'] = 'SO_march23.pf'|
+\item \verb|define['gamma'] = 0.1203| \\
+\verb|define['gamma-n'] = 0.5| \\
+\verb|define['gamma-He'] = 0.0475| \\
+\verb|define['gamma-n-He'] = 0.5| \\
+(averaged broadening parameters for H$_2$ and He)
+\item If have broadening files uncomment and replace: \\
+\verb|#define['broadeners'] = {}|\\
+\verb|#define['broadeners'][0] = (0.86, 'SO2_H2.broad')|\\
+\verb|#define['broadeners'][1] = (0.14, 'SO2_He.broad')|
+\item \verb|define['min_gridspacing'] = 0.01| \\ can also be set to 0.1 (in units of wavenumber) if the line list is larger 
+
+\item \textbf{Define range?}
+
+\verb|define['ranges'] = [(100,60000)]| \\
+\verb|define['fullrange'] = [(100,60000)]| \\
+
+\end{itemize}
+
+\subsection*{2. Create input and batch run files}
+
+\begin{itemize}
+\item \verb|python generate_submit_nosplit_GRID_nosuper.py SO_input.py|\footnote{module load python/intel/3.6}
+\item This will create the input files for all the pressure-temperature combinations in the input folder. A batch file for running (currently 594 files, should take less than an hour per file unless the line list is too large): \\ \verb|sh batch_submit_all.sh| \\
+\end{itemize}
+
+\subsection*{3. Run reinterpolate to combine xsec files}
+
+\begin{itemize}
+\item This should be very quick to run (less than 1 hour, which is the number at the end): \\
+\verb|./b_reinterpolate.sh SO_input.py 1| \\
+This is equivalent to the following inline command:\\ 
+\verb|python reinterpolate_xsec.py SO_input.py|
+\end{itemize}   
+
+\subsection*{4. Create all cross-section and k-table files for the 4 retrieval codes}
+
+\begin{itemize}
+\item These files are all stored in: \\
+\verb|/scratch/dp060/dc-chub1/ExoCross/general_replace_files_run_all| \\
+(RUNALL currently assumes this folder is one level back from the folder you are running the opacities in, you can change this)
+\item Open the file RUNALL and replace parts of these lines for the molecule: \\
+\verb|sed -i -e 's/xxx/32S-16O__ExoMol_March2023/g' grep_replace_tmp| \\
+(the line list and iso reference) \\ \\
+\verb|sed -i -e 's/yyy/SO/g' grep_replace_tmp| \\
+(molecule name) \\ \\
+\verb|sed -i -e 's/zzz/48/g' grep_replace_tmp| \\
+(the molar mass) \\ \\
+\verb|sed -i -e 's/qqq/10.1039\\\/D2CP03051A/g' grep_replace_tmp| \\
+(the DOI of the line-list publication) \\ \\
+\verb|sed -i -e 's/vvv/v0_080323/g' grep_replace_tmp| \\
+(The version number, usually just v1 and the date) \\
+Note leave all xxx, yyy, zzz etc parts as they are.
+\item \verb|sh RUNALL|
+\item In case of any problems, the corresponding command lines are (for an LiOH example)
+
+{\footnotesize \tt
+\verb|python3 create_ktables_R1000.py --dict LiOH_input.py  --wl 0.3,50 --resolution 1000 --ngauss 20 --ncores 36 --key_iso_ll 7Li-16O-1H__OYT7 --mname LiOH --mol_mass 24|
+
+\verb|python3 sample_xsec_hdf5.py  --dict ./LiOH_input.py  --wl 0.3,50 --resolution 15000 --key_iso_ll 7Li-16O-1H__OYT7 --mname LiOH --mol_mass 24|
+
+\verb|python3 create_ktables_NEMESIS_hdf5_R1000_NEWORDER_microns.py  --dict LiOH_input.py  --ncores 36 --title petitRADTRANS_R1000_final_v1 --key_iso_ll 7Li-16O-1H__OYT7  --input_grid bin_edges_wn_cut.dat --mol_mass 24 --mname LiOH|
+
+\verb|python3 create_ktables_NEMESIS_hdf5_R1000_NEWORDER_microns.py --dict LiOH_input.py --wl 0.3,50 --resolution 1000 --ngauss 20 --ncores 36 --title NEMESIS_final_v1 --key_iso_ll 7Li-16O-1H__OYT7|
+}
+
+\end{itemize}
+
+\subsection*{5. Folders with a file for all 4 codes should now be created (within a few hours)}
+
+\begin{itemize}
+\item PetitRADTRANS folder: \\
+\verb|xsec_ktable_petitRADTRANS_R1000_final_v1_16g/|
+\item PetitRADTRANS file in that folder: \\
+\verb|32S-16O__ExoMol_March2023.R1000_0.3-50mu.ktable.petitRADTRANS.h5|
+\item TauREx3 folder: \\
+\verb|xsec_hdf5_sampled_R15000_0.3-50_final_v1/|
+\item TauREx3 file in that folder: \\
+\verb|32S-16O__ExoMol_March2023.R15000_0.3-50mu.xsec.TauREx.h5|
+\item NEMESIS folder: \\
+\verb|xsec_ktable_NEMESIS_final_v1_20g/|
+\item NEMESIS file in that folder: \\
+\verb|SO_R1000_0.3-50mu.ktable.TauREx.h5| \\ (needs extra conversion, see below)
+\item ARCiS folder: \\
+\verb|xsec_ktable_R1000_0.3-50mu_20g_final_v1/|
+\item ARCiS file in that folder: \\
+\verb|32S-16O__ExoMol_March2023_R1000_0.3-50mu.ktable.TauREx.pickle| \\ (needs extra conversion, see below)
+\end{itemize}
+
+\subsection*{6. Convert ARCiS}
+NEMESIS and ARCiS require an extra step for converting. 
+
+\begin{itemize}
+\item For ARCiS: \\
+In \verb|NEW_TauRex2ARCiS.py| replace:\\
+\verb|32S-16O__ExoMol_March2023_R1000_0.3-50mu.ktable.TauREx.pickle|
+\item and then run: \\
+ \verb|python NEW_TauRex2ARCiS.py| \\
+\verb|gzip 32S-16O__ExoMol_March2023.R1000_0.3-50mu.ktable.ARCiS.fits|
+\end{itemize}
+
+\begin{itemize}
+\item For NEMESIS: \\
+In \verb|Convertbinary_R1000_neworder.py| replace:\\
+filename and \verb|output_filename|
+\item \verb|x=60 #IDGAS1 FROM HITRAN| \\
+(The ID is from \verb|NEMESIS_IDS.txt|, if there is a new molecule without an ID there I usually check with Jo Barstow which new ID to use)
+\item and then run: \\
+ \verb|python Convertbinary_R1000_neworder.py| 
+\end{itemize}
+
+\section{Super-lines}
+
+Very similar to above but with some different files and an extra stage to run (step 1 of superlines). Using SO$_2$ as an example here. 
+
+\subsection*{1. Set up input file and replace:}
+
+Same as for non-superlines setup above, but likely with more .trans files to add in. 
+
+\subsection*{2. Create input and batch run files}
+
+Same as above but use a different file, called \verb|generate_submit_super_trans.py|, 
+
+Again \verb|define['min_gridspacing'] = 0.01| can be changed to 0.1. 
+\begin{itemize}
+\item \verb|python generate_submit_super_trans.py SO2_input.py|
+
+\item This time there are two batch files, the first needs to run and complete first before the second: \\
+\verb|sh batch_submit_super1.sh| \\
+the super-lines step 1 files need to be re-named to have .super suffix, as that is what the step 2 files will read from.\\ \\
+\verb|sh batch_submit_super2.sh|
+\end{itemize}
+
+After that everything else should be the same as for the non-super-lines case. 
+
+
+\section{Combining opacities}
+
+
+If you look on DIAL at the folder \verb!/scratch/dp060/dc-chub1/ExoCross/CO_comb! then you'll see some files: 
+
+
+\noindent 
+\verb!b_combine_isos.sh!\\
+\verb!run_combine_isos.csh!\\
+\verb!combine_isos.py! \\
+\verb!batch_run_combine.sh!
+
+\noindent 
+\verb!batch_run_combine.sh! contains the 594 standard pressure/temperature combinations; \\
+\verb!combine_isos.py!: here you need to specify the folders with the xsecs for the isotopologues you would like to combine using \verb!iso1_inp!, \verb!iso2_inp!, etc. 
+I think the .\verb!xsec! files you want to combine need to have the same number of rows (i.e. computed at the same wavenumbers, using the same resolution or number of points) for each given T/P combination for each isotopologue you want to combine. If they don't you would need to interpolate them to the same grid of wavenumbers.
+You then need to change this section to have the relative abundances of each isotopologue, summed to 1: 
+
+\begin{verbatim}
+#iso abundanaces
+#1216
+a1 = 0.987
+#1217
+a2 = 0.0000037
+#1218
+a3 = 0.00002
+#1316
+a4 = 0.011
+#1317
+a5 = 0.000000041
+#1318
+a6 = 0.00000022
+\end{verbatim}
+where 
+$$
+y_c = a1*y[i] + a2*y2[i] + a3*y3[i] + a4*y4[i] + a5*y5[i] +a6*y6[i]
+$$
+
+Again, cut down if you have less. 
+
+Then name the folder and file for your output xsecs: 
+
+\verb!./xsec_br/CO_NA_T%s_P%s.xsec!
+and run \verb!batch_run_combine.sh!.
+
+Create directory `xsec'.
+
+After that run the other steps as normal but with a new name for the isotopologue and linelist (e.g \verb!C-O-NatAbund__Li2015\verb!). For this I create a new input file, e.g. \verb!CO_comb_input.py!, and call the molecule e.g. \verb!CO_NA!. 
+
+
+HITRAN lists some of the main abundances but not all at \verb!https://hitran.org/docs/iso-meta/!. 
+
+\end{document}
